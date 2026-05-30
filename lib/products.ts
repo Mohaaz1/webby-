@@ -287,6 +287,144 @@ export const products: Product[] = [
     reviews: 189,
     inStock: true,
     gender: "unisex"
+  },
+  // Home Appliances
+  {
+    id: "home-1",
+    name: "LG Washing Machine 8kg Front Load",
+    category: "Home Appliances",
+    price: 89999,
+    originalPrice: 105000,
+    image: "https://images.unsplash.com/photo-1584622181563-430f63602d4b?w=400&q=80",
+    rating: 4.8,
+    reviews: 234,
+    badge: "sale",
+    inStock: true,
+    gender: "unisex"
+  },
+  {
+    id: "home-2",
+    name: "Dyson V15 Cordless Vacuum",
+    category: "Home Appliances",
+    price: 125000,
+    image: "https://images.unsplash.com/photo-1584622181563-430f63602d4b?w=400&q=80",
+    rating: 4.9,
+    reviews: 167,
+    badge: "hot",
+    inStock: true,
+    gender: "unisex"
+  },
+  {
+    id: "home-3",
+    name: "Xiaomi Robot Vacuum Cleaner",
+    category: "Home Appliances",
+    price: 45000,
+    originalPrice: 52000,
+    image: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&q=80",
+    rating: 4.7,
+    reviews: 312,
+    badge: "new",
+    inStock: true,
+    gender: "unisex"
+  },
+  {
+    id: "home-4",
+    name: "Philips Smart Air Purifier",
+    category: "Home Appliances",
+    price: 38500,
+    image: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&q=80",
+    rating: 4.6,
+    reviews: 189,
+    inStock: true,
+    gender: "unisex"
+  },
+  {
+    id: "home-5",
+    name: "Tineco Smart Water Dispenser",
+    category: "Home Appliances",
+    price: 28999,
+    originalPrice: 35000,
+    image: "https://images.unsplash.com/photo-1584622181563-430f63602d4b?w=400&q=80",
+    rating: 4.5,
+    reviews: 145,
+    badge: "sale",
+    inStock: true,
+    gender: "unisex"
+  },
+  // Office Appliances
+  {
+    id: "office-1",
+    name: "Canon imageCLASS Printer",
+    category: "Office Appliances",
+    price: 45000,
+    originalPrice: 52000,
+    image: "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400&q=80",
+    rating: 4.7,
+    reviews: 156,
+    badge: "new",
+    inStock: true,
+    gender: "unisex"
+  },
+  {
+    id: "office-2",
+    name: "HP LaserJet Pro M428 Printer",
+    category: "Office Appliances",
+    price: 62000,
+    image: "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400&q=80",
+    rating: 4.8,
+    reviews: 234,
+    badge: "hot",
+    inStock: true,
+    gender: "unisex"
+  },
+  {
+    id: "office-3",
+    name: "Epson Scanner WorkForce Pro",
+    category: "Office Appliances",
+    price: 28500,
+    originalPrice: 33000,
+    image: "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400&q=80",
+    rating: 4.6,
+    reviews: 98,
+    badge: "sale",
+    inStock: true,
+    gender: "unisex"
+  },
+  {
+    id: "office-4",
+    name: "Xerox VersaLink C405 Copier",
+    category: "Office Appliances",
+    price: 185000,
+    image: "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400&q=80",
+    rating: 4.9,
+    reviews: 89,
+    inStock: true,
+    gender: "unisex"
+  },
+  {
+    id: "office-5",
+    name: "Brother Industrial Label Printer",
+    category: "Office Appliances",
+    price: 35999,
+    image: "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400&q=80",
+    rating: 4.5,
+    reviews: 145,
+    badge: "new",
+    inStock: true,
+    gender: "unisex"
+  },
+  {
+    id: "office-6",
+    name: "Kodak Alaris Scanner i3200",
+    category: "Office Appliances",
+    price: 95000,
+    originalPrice: 110000,
+    image: "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400&q=80",
+    rating: 4.8,
+    reviews: 201,
+    badge: "sale",
+    inStock: true,
+    gender: "unisex"
   }
 ]
 
@@ -315,5 +453,15 @@ export const categories = [
     name: "Kitchen",
     image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&q=80",
     count: products.filter(p => p.category === "Kitchen").length
+  },
+  {
+    name: "Home Appliances",
+    image: "https://images.unsplash.com/photo-1585515320310-259814833e62?w=400&q=80",
+    count: products.filter(p => p.category === "Home Appliances").length
+  },
+  {
+    name: "Office Appliances",
+    image: "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400&q=80",
+    count: products.filter(p => p.category === "Office Appliances").length
   }
 ]

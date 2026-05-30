@@ -9,7 +9,7 @@ type CheckoutScreenProps = {
   onBack: () => void
 }
 
-type PaymentMethod = "mpesa" | "paypal" | "card" | "cash"
+type PaymentMethod = "mpesa" | "paypal" | "card" | "bitcoin" | "cash"
 
 export function CheckoutScreen({ onBack }: CheckoutScreenProps) {
   const { cart, getPrice, cartTotal } = useStore()
@@ -27,6 +27,7 @@ export function CheckoutScreen({ onBack }: CheckoutScreenProps) {
   const [cardNumber, setCardNumber] = useState("")
   const [cardExpiry, setCardExpiry] = useState("")
   const [cardCvv, setCardCvv] = useState("")
+  const [bitcoinAddress, setBitcoinAddress] = useState("")
 
   const shipping = cartTotal >= 2000 ? 0 : 250
   const total = cartTotal + shipping
@@ -285,6 +286,32 @@ export function CheckoutScreen({ onBack }: CheckoutScreenProps) {
                 <p className="text-[10px] text-muted-foreground">Pay when you receive</p>
               </div>
             </button>
+
+            {/* Bitcoin */}
+            <button
+              type="button"
+              onClick={() => setPaymentMethod("bitcoin")}
+              className={`w-full p-3 border rounded-lg flex items-center gap-3 transition-colors ${
+                paymentMethod === "bitcoin" 
+                  ? "border-primary bg-primary/10" 
+                  : "border-border hover:border-muted-foreground"
+              }`}
+            >
+              <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 ${
+                paymentMethod === "bitcoin" ? "border-primary bg-primary" : "border-muted-foreground"
+              }`}>
+                {paymentMethod === "bitcoin" && (
+                  <div className="w-full h-full rounded-full bg-white scale-[0.4]" />
+                )}
+              </div>
+              <span className="px-2 py-1 bg-orange-600 text-white text-[10px] font-bold rounded">
+                ₿ BITCOIN
+              </span>
+              <div className="text-left flex-1">
+                <p className="text-sm font-bold text-white">Bitcoin</p>
+                <p className="text-[10px] text-muted-foreground">Pay with cryptocurrency</p>
+              </div>
+            </button>
           </div>
 
           {/* M-Pesa Panel */}
@@ -367,6 +394,43 @@ export function CheckoutScreen({ onBack }: CheckoutScreenProps) {
                   />
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Bitcoin Panel */}
+          {paymentMethod === "bitcoin" && (
+            <div className="mt-3 p-3 bg-orange-950/50 border border-orange-800 rounded-lg animate-fadeIn space-y-3">
+              <p className="text-xs font-bold text-orange-400 mb-2">Bitcoin Payment</p>
+              <div className="bg-secondary/50 border border-orange-800/50 rounded-lg p-3">
+                <p className="text-[10px] text-muted-foreground mb-2">Send payment to:</p>
+                <div className="flex gap-2 items-center">
+                  <code className="flex-1 text-[11px] font-mono text-orange-300 bg-secondary px-2 py-1.5 rounded overflow-auto">
+                    3J98t1WpEZ73CNmYviecrnyiWrnqRhWNLy
+                  </code>
+                  <button
+                    type="button"
+                    onClick={() => navigator.clipboard.writeText("3J98t1WpEZ73CNmYviecrnyiWrnqRhWNLy")}
+                    className="px-2 py-1.5 bg-orange-600 text-white text-[10px] font-bold rounded hover:bg-orange-700 transition-colors"
+                  >
+                    Copy
+                  </button>
+                </div>
+              </div>
+              <div>
+                <label className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
+                  Your Bitcoin Address (for refunds)
+                </label>
+                <input
+                  type="text"
+                  value={bitcoinAddress}
+                  onChange={(e) => setBitcoinAddress(e.target.value)}
+                  placeholder="1A1z7agoat..."
+                  className="w-full px-3 py-2.5 bg-secondary border border-border rounded-lg text-sm text-white placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                />
+              </div>
+              <p className="text-[10px] text-orange-300/80">
+                Pay the exact amount shown. Transaction will confirm within 10-30 minutes.
+              </p>
             </div>
           )}
         </div>
