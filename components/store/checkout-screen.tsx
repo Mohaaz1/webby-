@@ -433,6 +433,7 @@ export function CheckoutScreen({ onBack }: CheckoutScreenProps) {
               </p>
             </div>
           )}
+        </div>
 
         {/* Order Summary */}
         <div className="bg-card border border-border rounded-xl p-4 shadow">
