@@ -32,15 +32,57 @@ export function CheckoutScreen({ onBack }: CheckoutScreenProps) {
   const shipping = cartTotal >= 2000 ? 0 : 250
   const total = cartTotal + shipping
 
+  const validateForm = (): boolean => {
+    if (!fullName || !phone || !email || !address || !city) {
+      alert("Please fill in all delivery information")
+      return false
+    }
+
+    if (paymentMethod === "mpesa") {
+      if (!mpesaPhone || mpesaPhone.length < 9) {
+        alert("Please enter a valid M-Pesa phone number")
+        return false
+      }
+    }
+
+    if (paymentMethod === "card") {
+      if (!cardNumber || cardNumber.replace(/\s/g, "").length < 13) {
+        alert("Please enter a valid card number")
+        return false
+      }
+      if (!cardExpiry || !cardExpiry.match(/^\d{2}\/\d{2}$/)) {
+        alert("Please enter expiry in MM/YY format")
+        return false
+      }
+      if (!cardCvv || cardCvv.length < 3) {
+        alert("Please enter a valid CVV")
+        return false
+      }
+    }
+
+    if (paymentMethod === "bitcoin" && !bitcoinAddress) {
+      alert("Please enter your Bitcoin address")
+      return false
+    }
+
+    return true
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    
+    if (!validateForm()) {
+      return
+    }
+
     setIsProcessing(true)
     
-    // Simulate payment processing
+    // Simulate payment processing based on method
+    const processingTime = paymentMethod === "mpesa" ? 3000 : 2000
     setTimeout(() => {
       setIsProcessing(false)
       setOrderComplete(true)
-    }, 2000)
+    }, processingTime)
   }
 
   if (orderComplete) {
@@ -316,11 +358,13 @@ export function CheckoutScreen({ onBack }: CheckoutScreenProps) {
 
           {/* M-Pesa Panel */}
           {paymentMethod === "mpesa" && (
-            <div className="mt-3 p-3 bg-emerald-950/50 border border-emerald-800 rounded-lg animate-fadeIn">
-              <p className="text-xs font-bold text-emerald-400 mb-1">M-Pesa Payment</p>
-              <p className="text-[10px] text-muted-foreground mb-3">
-                Enter your M-Pesa registered phone number. {"You'll"} receive a payment prompt.
-              </p>
+            <div className="mt-3 p-3 bg-emerald-950/50 border border-emerald-800 rounded-lg animate-fadeIn space-y-3">
+              <div>
+                <p className="text-xs font-bold text-emerald-400 mb-1">M-Pesa Payment</p>
+                <p className="text-[10px] text-muted-foreground">
+                  Enter your M-Pesa registered phone number. {"You'll"} receive a payment prompt on your phone.
+                </p>
+              </div>
               <div className="flex gap-2">
                 <span className="px-3 py-2 bg-muted border border-border rounded-lg text-xs text-white font-semibold">
                   +254
@@ -328,10 +372,21 @@ export function CheckoutScreen({ onBack }: CheckoutScreenProps) {
                 <input
                   type="tel"
                   value={mpesaPhone}
-                  onChange={(e) => setMpesaPhone(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/[^\d]/g, "")
+                    setMpesaPhone(value.slice(0, 9))
+                  }}
                   placeholder="7XX XXX XXX"
-                  className="flex-1 px-3 py-2 bg-secondary border border-border rounded-lg text-sm text-white placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                  maxLength={9}
+                  className="flex-1 px-3 py-2 bg-secondary border border-border rounded-lg text-sm text-white placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors font-mono"
                 />
+              </div>
+              <div className="bg-emerald-900/50 border border-emerald-700/50 rounded p-2">
+                <p className="text-[10px] text-emerald-300">
+                  ✓ Instant payment confirmation<br/>
+                  ✓ Works on all M-Pesa networks<br/>
+                  ✓ 24/7 transaction history
+                </p>
               </div>
             </div>
           )}
@@ -349,12 +404,15 @@ export function CheckoutScreen({ onBack }: CheckoutScreenProps) {
           {/* Card Panel */}
           {paymentMethod === "card" && (
             <div className="mt-3 space-y-3 animate-fadeIn">
-              <div className="flex gap-1.5">
-                {["Visa", "Mastercard", "Verve"].map((type) => (
-                  <span key={type} className="px-2 py-1 bg-secondary border border-border rounded text-[10px] text-muted-foreground">
-                    {type}
-                  </span>
-                ))}
+              <div className="bg-blue-950/50 border border-blue-800 rounded p-2 mb-3">
+                <p className="text-xs font-bold text-blue-400 mb-1">Accepted Cards</p>
+                <div className="flex gap-1.5">
+                  {["Visa", "Mastercard", "Verve"].map((type) => (
+                    <span key={type} className="px-2 py-1 bg-secondary border border-border rounded text-[10px] text-muted-foreground font-semibold">
+                      {type}
+                    </span>
+                  ))}
+                </div>
               </div>
               <div>
                 <label className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
@@ -363,22 +421,35 @@ export function CheckoutScreen({ onBack }: CheckoutScreenProps) {
                 <input
                   type="text"
                   value={cardNumber}
-                  onChange={(e) => setCardNumber(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\s/g, "").replace(/[^\d]/g, "")
+                    const formatted = value.replace(/(\d{4})/g, "$1 ").trim()
+                    setCardNumber(formatted)
+                  }}
                   placeholder="1234 5678 9012 3456"
-                  className="w-full px-3 py-2.5 bg-secondary border border-border rounded-lg text-sm text-white placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                  maxLength={19}
+                  className="w-full px-3 py-2.5 bg-secondary border border-border rounded-lg text-sm text-white placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors font-mono"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
-                    Expiry
+                    Expiry (MM/YY)
                   </label>
                   <input
                     type="text"
                     value={cardExpiry}
-                    onChange={(e) => setCardExpiry(e.target.value)}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/[^\d]/g, "")
+                      if (value.length <= 2) {
+                        setCardExpiry(value)
+                      } else if (value.length <= 4) {
+                        setCardExpiry(`${value.slice(0, 2)}/${value.slice(2, 4)}`)
+                      }
+                    }}
                     placeholder="MM/YY"
-                    className="w-full px-3 py-2.5 bg-secondary border border-border rounded-lg text-sm text-white placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                    maxLength={5}
+                    className="w-full px-3 py-2.5 bg-secondary border border-border rounded-lg text-sm text-white placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors font-mono"
                   />
                 </div>
                 <div>
@@ -388,9 +459,13 @@ export function CheckoutScreen({ onBack }: CheckoutScreenProps) {
                   <input
                     type="text"
                     value={cardCvv}
-                    onChange={(e) => setCardCvv(e.target.value)}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/[^\d]/g, "")
+                      setCardCvv(value.slice(0, 4))
+                    }}
                     placeholder="123"
-                    className="w-full px-3 py-2.5 bg-secondary border border-border rounded-lg text-sm text-white placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                    maxLength={4}
+                    className="w-full px-3 py-2.5 bg-secondary border border-border rounded-lg text-sm text-white placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors font-mono"
                   />
                 </div>
               </div>
